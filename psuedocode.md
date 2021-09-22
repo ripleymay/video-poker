@@ -47,5 +47,5 @@
     * tell them their winnings, maybe some stats on how many rounds they played 
     * call the initialize function to reset all state variables
 
-Thid video helped me learn how to play: https://www.youtube.com/watch?v=J89HlCYccds
-And I'm kind of modeling this browser game: https://www.freeslots.com/poker.htm
+This video helped me learn how to play: https://www.youtube.com/watch?v=J89HlCYccds  
+And I used this browser game as a model: https://www.freeslots.com/poker.htm
