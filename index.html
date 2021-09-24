@@ -1,14 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ripley's Casino</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap">
+    <link rel="stylesheet" href="css/card-deck-css/css/cardstarter.css"/>
     <link rel="stylesheet" href="css/main.css">
     <script defer src="js/main.js"></script>
 </head>
+
 <body>
-    
+    <header>
+        <h1>Video Poker</h1>
+        <h2>Jacks or Better</h2>
+    </header>
+    <main>
+        <h3>Welcome!</h3>
+        <section id="scoreboard">
+            <ol id="win-names">
+                <li>Royal Flush</li><li>Straight Flush</li><li>Four of a Kind</li>
+                <li>Full House</li><li>Flush</li><li>Straight</li>
+                <li>Three of a Kind</li><li>Two Pair</li><li>Jacks or Better</li>
+            </ol>
+            <ol class="values">
+                <li>250</li><li>500</li><li>750</li><li>1000</li><li>1250</li>
+            </ol>
+            <ol class="values">
+                <li>50</li><li>100</li><li>150</li><li>200</li><li>250</li>
+            </ol>
+            <ol class="values">
+                <li>25</li><li>50</li><li>75</li><li>100</li><li>125</li>
+            </ol>
+            <ol class="values">
+                <li>9</li><li>18</li><li>27</li><li>36</li><li>45</li>
+            </ol>
+            <ol class="values">
+                <li>6</li><li>12</li><li>18</li><li>24</li><li>30</li>
+            </ol>
+            <ol class="values">
+                <li>4</li><li>8</li><li>12</li><li>16</li><li>20</li>
+            </ol>
+            <ol class="values">
+                <li>3</li><li>6</li><li>9</li><li>12</li><li>15</li>
+            </ol>
+            <ol class="values">
+                <li>2</li><li>4</li><li>6</li><li>8</li><li>10</li>
+            </ol>
+            <ol class="values">
+                <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+            </ol>
+            
+        </section>
+        <section id="hand">
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+        </section>
+        <section id="user-bar">
+            <p id="credits">5 credits</p>
+            <button class="bet" id="one">Bet one</button>
+            <button class="bet" id="max">Bet max</button>
+            <button id="deal-draw">Deal / draw</button>        
+            <button id="cash-out">Cash out!</button>
+        </section>
+    </main>
+    <footer>Need help learning how to play?</footer>
 </body>
 </html>
