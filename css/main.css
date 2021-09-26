@@ -47,3 +47,7 @@ ol {
     background-color: white;
     padding: 5%;
 }
+
+#user-bar > p {
+    text-align: center;
+}

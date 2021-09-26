@@ -1,9 +1,12 @@
 /*----- constants -----*/
+// from card repo
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-const START_CREDS = 5;
-const MAX_CREDS = 5;
+const masterDeck = buildMasterDeck();
+
+const START_CREDS = 50;
+const MAX_BET = 5;
 
 const winLookup = [
     {name: 'Royal Flush', multiplier: 250},
@@ -19,64 +22,93 @@ const winLookup = [
 
 
 /*----- app's state (variables) -----*/
-let hand, credits, bet, round
+let deck, hand, credits, bet, round;
 
 
 /*----- cached element references -----*/
-const scoreElems = [...document.querySelectorAll('#scoreboard > ol.winnings')];
-const handElem = [...document.querySelectorAll('div.card')];
+const scoreElems = [...document.querySelectorAll('#scoreboard > ol.values')];
+const handElem = document.getElementById('hand');
 
 
 /*----- event listeners -----*/
-document.querySelector('button.bet').addEventListener('click', handleBet);
+document.querySelectorAll('button.bet').forEach(button => 
+  button.addEventListener("click", handleBet)
+);
 // not sure if this will work - should maybe be all?
 document.getElementById('deal-draw').addEventListener('click', handleDeal);
 document.getElementById('cash-out').addEventListener('click', handleCashout);
+
+handElem.addEventListener('click', handleHold);
 
 
 /*----- functions -----*/
 init();
 
 function init() {
-    hand = [null, null, null, null, null];
+    hand = [{face: 'back'}, {face: 'back'}, {face: 'back'}, 
+      {face: 'back'}, {face: 'back'}];
     credits = START_CREDS;
     bet = 0;
     round = 0;
-
-    // shuffleDeck();
 
     render();
 }
 
 function render() {
+    renderScoreboard();
     renderHand();
+    document.getElementById('bet').innerHTML = `Bet ${bet}`;
     document.getElementById('credits').innerHTML = `${credits} credits`;
 }
 
-function renderHand() {
-    hand.forEach(function(card, index) {
-        if (!card) handElem[index].classList.add('back');
-    })
+function renderScoreboard() {
+  // hightlight correct bet column
+  scoreElems.forEach(function(col, index) {
+    col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'transparent';
+  })
+}
 
-    /* or..
-    handElem.forEach(function(cardElem, cardIdx) {
-        let card = hand[cardIdx]
-        if (!card) cardElem.classList.add("back-red");
-    })
-    */
+function renderHand() {
+  let cardsHtml = '';
+  hand.forEach(function(card) {
+    cardsHtml += `<div class="card ${card.face}"></div>`;
+  })
+  handElem.innerHTML = cardsHtml;
 }
 
 function handleBet(evt) {
+  // TO DO: somehow reset credits when bet is reset
+  // and alert player when they dont have enough credits to bet
 
+  if (evt.target.id === 'one') {
+    bet = (bet >= MAX_BET) ? 1 : ++bet;
+    credits--;
+  } else if (evt.target.id === 'max') {
+    bet = MAX_BET;
+    credits -= MAX_BET;
+  }
+
+  render();
 }
 
 function handleDeal() {
-    if (!round) return; 
-    checkForWin();
+  // if (!round) return; 
+
+  deck = getNewShuffledDeck();
+  for (let i = 0; i < 5; i++) {
+    hand[i] = deck[i];
+  }
+  console.log(hand);
+  checkForWin();
+  render();
 }
 
 function handleCashout() {
 
+}
+
+function handleHold(evt) {
+  console.log(evt.target);
 }
 
 function checkForWin() {
@@ -84,8 +116,6 @@ function checkForWin() {
 }
 
 // card functions
-const masterDeck = buildMasterDeck();
-
 function buildMasterDeck() {
     const deck = [];
     // Use nested forEach to generate card objects
