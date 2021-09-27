@@ -2,7 +2,7 @@
     box-sizing: border-box;
   }
 
-body, main, header, #scoreboard, #hand, #user-bar {
+body, main, header, #scoreboard, #hand {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,36 +16,62 @@ body, header, main {
 
 body {
     height: 100vh;
-    margin: 0;
+    margin: 1%;
     background-color: green;
 }
 
-main {
+/* main {
     width: 80%;
-}
+} */
 
 header > * {
     margin: 0 auto;
 }
 
+h1 {
+    font-size: 6vh;
+}
+
+h2 {
+    font-size: 3vh;
+}
+
 #scoreboard {
-    width: 80%;
-    height: 45%;
+    width: 60vh;
+    height: 30vh;
+    margin: 3%;
+    align-items: stretch;
     /* border: 4px solid black; */
 }
 
 ol {
+    font-size: 2vh;
     list-style-type: none; 
     border: 2px solid black;
     padding: 0 2%;
     margin: 0;
 }
 
+#user-bar {
+    display: grid;
+    grid-template-columns: 18% 16% 16% 16% 16% 18%;
+    grid-template-rows: 35% 65%;
+    width: 60vh;
+    margin: 3%;
+}
+
 #user-bar > button {
-    border: 2px dashed blue;
+    border: 4px dashed blue;
     border-radius: 50%;
     background-color: white;
-    padding: 5%;
+    margin: 5%;
+}
+
+#user-bar > h3 {
+    font-size: 3vh;
+    text-align: center;
+    grid-column: 1 / -1;
+    margin: 0;
 }
 
 #user-bar > p {

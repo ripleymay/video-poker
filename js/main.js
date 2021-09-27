@@ -22,7 +22,7 @@ const winLookup = [
 
 
 /*----- app's state (variables) -----*/
-let deck, hand, credits, bet, round;
+let deck, hand, credits, bet, msg, round;
 
 
 /*----- cached element references -----*/
@@ -50,6 +50,7 @@ function init() {
     credits = START_CREDS;
     bet = 0;
     round = 0;
+    msg = 'Welcome!';
 
     render();
 }
@@ -57,6 +58,7 @@ function init() {
 function render() {
     renderScoreboard();
     renderHand();
+    document.getElementById('message').innerHTML = `${msg}`;
     document.getElementById('bet').innerHTML = `Bet ${bet}`;
     document.getElementById('credits').innerHTML = `${credits} credits`;
 }
@@ -70,36 +72,42 @@ function renderScoreboard() {
 
 function renderHand() {
   let cardsHtml = '';
-  hand.forEach(function(card) {
-    cardsHtml += `<div class="card ${card.face}"></div>`;
+  hand.forEach(function(card, index) {
+    cardsHtml += `<div id=c${index} class="card ${card.face}">Test</div>`;
   })
   handElem.innerHTML = cardsHtml;
 }
 
 function handleBet(evt) {
-  // TO DO: somehow reset credits when bet is reset
-  // and alert player when they dont have enough credits to bet
+  // TO DO: alert player when they dont have enough credits to bet
 
   if (evt.target.id === 'one') {
-    bet = (bet >= MAX_BET) ? 1 : ++bet;
-    credits--;
+    if (bet >= MAX_BET) {
+      bet = 1;
+      credits = credits + MAX_BET - bet;
+    } else {
+      bet++;
+      credits--;
+    }
   } else if (evt.target.id === 'max') {
+    credits = credits + bet - MAX_BET;
     bet = MAX_BET;
-    credits -= MAX_BET;
   }
 
   render();
 }
 
 function handleDeal() {
-  // if (!round) return; 
+  if (!bet) {
+    msg = 'You\'ve gotta bet first!';
 
-  deck = getNewShuffledDeck();
-  for (let i = 0; i < 5; i++) {
-    hand[i] = deck[i];
-  }
-  console.log(hand);
-  checkForWin();
+  } else {
+    deck = getNewShuffledDeck();
+    hand = deck.slice(0, 5);
+
+    checkForWin();
+  } 
+
   render();
 }
 
@@ -108,7 +116,7 @@ function handleCashout() {
 }
 
 function handleHold(evt) {
-  console.log(evt.target);
+  console.log(evt.target.id);
 }
 
 function checkForWin() {
