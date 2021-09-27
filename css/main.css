@@ -52,6 +52,10 @@ ol {
     margin: 0;
 }
 
+#hand > div.held {
+    border: 5px solid darkblue;
+}
+
 #user-bar {
     display: grid;
     grid-template-columns: 18% 16% 16% 16% 16% 18%;
@@ -61,7 +65,7 @@ ol {
 }
 
 #user-bar > button {
-    border: 4px dashed blue;
+    border: 4px dashed darkblue;
     border-radius: 50%;
     background-color: white;
     margin: 5%;
