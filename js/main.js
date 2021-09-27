@@ -1,7 +1,8 @@
 /*----- constants -----*/
 // CARD CONSTANTS - taken from class repo
 const suits = ['s', 'c', 'd', 'h'];
-const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '01'];
+// changed the A K Q J ranks to be numerical values just to make sorting & evaluating wins easier
 const masterDeck = buildMasterDeck();
 
 const START_CREDS = 50;
@@ -21,7 +22,7 @@ const winLookup = [
 
 
 /*----- app's state (variables) -----*/
-let deck, hand, credits, bet, msg, round;
+let deck, hand, credits, bet, inPlay, msg;
 
 
 /*----- cached element references -----*/
@@ -45,46 +46,51 @@ handElem.addEventListener('click', handleHold);
 init();
 
 function init() {
-    hand = [{face: 'back'}, {face: 'back'}, {face: 'back'}, 
-      {face: 'back'}, {face: 'back'}];
-    // hand = [];
+    initHand();
     credits = START_CREDS;
     bet = 0;
-    round = 1;
+    inPlay = false;
     msg = 'Welcome!';
 
     render();
 }
 
+function initHand() {
+  hand = [{face: 'back'}, {face: 'back'}, {face: 'back'}, 
+      {face: 'back'}, {face: 'back'}];
+}
+
 function render() {
     renderScoreboard();
     renderHand();
-    document.getElementById('message').innerHTML = `testing! round ${round}`;
+    document.getElementById('message').innerHTML = `testing: in play is ${inPlay}`;
     document.getElementById('bet').innerHTML = `Bet ${bet}`;
     document.getElementById('credits').innerHTML = `${credits} credits`;
     dealBtn.disabled = (!bet) ? true : false;
     betBtns.forEach(button => 
-      button.disabled = (round === 2) ? true : false
+      button.disabled = inPlay ? true : false
     );
 }
 
 function renderScoreboard() {
   scoreElems.forEach(function(col, index) {
-    col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'transparent';
+    col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
   })
 }
 
 function renderHand() {
   let cardsHtml = '';
   hand.forEach(function(card, index) {
-    let hold = (card.held) ? 'held' : '';
-    cardsHtml += `<div id=${index} class="card ${card.face} ${hold}"></div>`;
+    let hold = (card.held) ? ' held' : '';
+    cardsHtml += `<div id=${index} class="card ${card.face}${hold}"></div>`;
   })
   handElem.innerHTML = cardsHtml;
 }
 
 function handleBet(evt) {
   // TO DO: alert player when they dont have enough credits to bet
+  initHand();
+
   if (evt.target.id === 'one') {
     betOne();
   } else if (evt.target.id === 'max') {
@@ -110,41 +116,41 @@ function betMax() {
 }
 
 function handleDeal() {
-  if (round === 1) {
+  if (!inPlay) {
     deck = getNewShuffledDeck();
     hand = deck.slice(0, 5);
-    round++;
+    inPlay = true;
 
     checkForWin();
-  } else if (round === 2) {
+  } else if (inPlay) {
     hand.forEach(function(card, index) {
       if (!card.held) {
         hand[index] = deck.pop();
       }
     });
-    round--;
+    inPlay = false;
 
     checkForWin();
     // add winnings to credits
-    bet = 0;
+    // reset bet but somehow keep column highlighted ?
   }
 
   render();
 }
 
 function handleHold(evt) {
-  if (round != 2) return;
+  if (!inPlay) return;
   hand[evt.target.id].held = !hand[evt.target.id].held;
 
   render();
 }
 
 function handleCashout() {
-
+ //
 }
 
 function checkForWin() {
-
+  const sortedHand = [...hand];
 }
 
 
@@ -158,7 +164,7 @@ function buildMasterDeck() {
           // The 'face' property maps to the library's CSS classes for cards
           face: `${suit}${rank}`,
           // Setting the 'value' property for game of blackjack, not war
-          value: Number(rank) || (rank === 'A' ? 11 : 10),
+          value: Number(rank),
           held: false
         });
       });
