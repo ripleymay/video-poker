@@ -11,18 +11,18 @@ const MAX_BET = 5;
 const winLookup = [
   { name: 'Royal Flush', multiplier: 250 },
   { name: 'Straight Flush', multiplier: 50 },
-  { name: 'Four of a Kind', multiplier: 25 },
-  { name: 'Full House', multiplier: 9 },
-  { name: 'Flush', multiplier: 6 },
-  { name: 'Straight', multiplier: 4 },
-  { name: 'Three of a Kind', multiplier: 3 },
-  { name: 'Two Pair', multiplier: 2 },
-  { name: 'Jacks or Better', multiplier: 1 }
+  { name: 'Four of a Kind', multiplier: 25, sequence: '14444'},
+  { name: 'Full House', multiplier: 9, sequence: '22333'},
+  { name: 'Flush', multiplier: 6},
+  { name: 'Straight', multiplier: 4},
+  { name: 'Three of a Kind', multiplier: 3, sequence: '11333'},
+  { name: 'Two Pair', multiplier: 2, sequence: '12222'},
+  { name: 'Jacks or Better', multiplier: 1, sequence: '11122'}
 ]
 
 
 /*----- app's state (variables) -----*/
-let deck, hand, credits, bet, inPlay, msg;
+let deck, hand, win, credits, bet, inPlay, msg;
 
 
 /*----- cached element references -----*/
@@ -49,6 +49,7 @@ function init() {
   initHand();
   credits = START_CREDS;
   bet = 0;
+  win = 0;
   inPlay = false;
   msg = 'Welcome!';
 
@@ -56,17 +57,17 @@ function init() {
 }
 
 function initHand() {
-  hand = [{ face: 'back', value: NaN, held: false },
-  { face: 'back', value: NaN, held: false },
-  { face: 'back', value: NaN, held: false },
-  { face: 'back', value: NaN, held: false },
-  { face: 'back', value: NaN, held: false }];
+  hand = [{ face: 'back', value: NaN, held: false},
+  { face: 'back', value: NaN, held: false},
+  { face: 'back', value: NaN, held: false},
+  { face: 'back', value: NaN, held: false},
+  { face: 'back', value: NaN, held: false}];
 }
 
 function render() {
   renderScoreboard();
   renderHand();
-  document.getElementById('message').innerHTML = `testing: in play is ${inPlay}`;
+  document.getElementById('message').innerHTML = `winner is... ${winLookup[win - 1].name}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
   document.getElementById('credits').innerHTML = `${credits} credits`;
   dealBtn.disabled = (!bet) ? true : false;
@@ -93,6 +94,7 @@ function renderHand() {
 function handleBet(evt) {
   // TO DO: alert player when they dont have enough credits to bet
   initHand();
+  win = 0;
 
   if (evt.target.id === 'one') {
     betOne();
@@ -125,7 +127,7 @@ function handleDeal() {
     // theres a bug here that sometimes deals already 'held' cards
     inPlay = true;
 
-    checkForWin();
+    win = checkForWin();
   } else if (inPlay) {
     hand.forEach(function (card, index) {
       if (!card.held) {
@@ -134,7 +136,7 @@ function handleDeal() {
     });
     inPlay = false;
 
-    checkForWin();
+    win = checkForWin();
     // add winnings to credits
     // reset bet but somehow keep column highlighted ?
   }
@@ -154,43 +156,49 @@ function handleCashout() {
 }
 
 function checkForWin() {
-  let handWins = [];
+  let handWins = [0];
 
   const handSuits = [...hand].map(card => card.face[0])
     .reduce(function (acc, suit) {
       return acc.includes(suit) ? acc : acc += suit;
     }, '');
   const handVals = [...hand].map(card => card.value).sort((card, nextCard) => card - nextCard);
+  const normalizedHandVals = normalizeRanks(handVals);
 
   if (handSuits.length === 1) {
   // we have a flush
     if (handVals.every((value, index) => value === handVals[0] + index)) {
-      handWins.push('Straight Flush');
+      handWins.push(2);
     } else if (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index)) {
       // probably not the most elegant way to do this ^
-      handWins.push('Royal Flush');
+      handWins.push(1);
     } else {
-      handWins.push('Flush');
+      handWins.push(5);
     }
 
   } else {
     // there is no flush
     if (handVals.every((value, index) => value === handVals[0] + index)) {
-      handWins.push('Straight');
-    } else if (for of kind) {
-      handWins.push('Four of a Kind');
-    } else if (three of a kind) {
-      if (full house) handWinds.push('Full House');
-      handWins.push('Three of a Kind');
-    } else if (pair) {
-      if (two pair) handWins.push('Two Pair');
-      if (jacks or better) handWins.push('Jacks or Better');
+      handWins.push(6);
+    } else if (normalizedHandVals === '11122') {
+      if (handVals.some((value, index) => (value >= 11 && (value === handVals[index = 1] || value === handVals[index - 1])))) handWins.push(9);
+    } else {
+      handWins.push(winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1);
     }
   }
 
-  console.log(handSuits);
-  console.log(handVals);
-  console.log(handWins);
+  return Math.min(...handWins);
+}
+
+function normalizeRanks(rankArray) {
+  let normalized = [];
+
+  rankArray.forEach(function(rank) {
+    let count = rankArray.reduce((acc, value) => (value === rank ? ++acc : acc), 0);
+    normalized.push(count);
+  })
+
+  return normalized.sort().join('');
 }
 
 
