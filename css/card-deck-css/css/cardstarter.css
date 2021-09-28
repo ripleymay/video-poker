@@ -2,7 +2,7 @@
 .card {
   box-sizing: border-box;
   display: inline-block;
-  margin: 5px;
+  margin: 5px 5px 50px 5px;
   cursor: pointer;
   /* Set the card's dimensions, and size it relative to
      it's font size. */
@@ -41,24 +41,24 @@
     background-color: rgba(195, 195, 195, 0.5);
     border: 0.15em dashed #daa520; }
 
-.card.diamonds.r01,
-.card.d01,
-.card.♦01 {
+.card.diamonds.A,
+.card.dA,
+.card.♦A {
   background-image: url("../images/diamonds/diamonds-A.svg"); }
 
-.card.diamonds.r13,
-.card.d13,
-.card.♦13 {
+.card.diamonds.K,
+.card.dK,
+.card.♦K {
   background-image: url("../images/diamonds/diamonds-K.svg"); }
 
-.card.diamonds.r12,
-.card.d12,
-.card.♦12 {
+.card.diamonds.Q,
+.card.dQ,
+.card.♦Q {
   background-image: url("../images/diamonds/diamonds-Q.svg"); }
 
-.card.diamonds.r11,
-.card.d11,
-.card.♦11 {
+.card.diamonds.J,
+.card.dJ,
+.card.♦J {
   background-image: url("../images/diamonds/diamonds-J.svg"); }
 
 .card.diamonds.r10,
@@ -106,24 +106,24 @@
 .card.♦02 {
   background-image: url("../images/diamonds/diamonds-r02.svg"); }
 
-.card.hearts.r01,
-.card.h01,
-.card.♥01 {
+.card.hearts.A,
+.card.hA,
+.card.♥A {
   background-image: url("../images/hearts/hearts-A.svg"); }
 
-.card.hearts.r13,
-.card.h13,
-.card.♥13 {
+.card.hearts.K,
+.card.hK,
+.card.♥K {
   background-image: url("../images/hearts/hearts-K.svg"); }
 
-.card.hearts.r12,
-.card.h12,
-.card.♥12 {
+.card.hearts.Q,
+.card.hQ,
+.card.♥Q {
   background-image: url("../images/hearts/hearts-Q.svg"); }
 
-.card.hearts.r11,
-.card.h11,
-.card.♥11 {
+.card.hearts.J,
+.card.hJ,
+.card.♥J {
   background-image: url("../images/hearts/hearts-J.svg"); }
 
 .card.hearts.r10,
@@ -171,24 +171,24 @@
 .card.♥02 {
   background-image: url("../images/hearts/hearts-r02.svg"); }
 
-.card.spades.r01,
-.card.s01,
-.card.♠01 {
+.card.spades.A,
+.card.sA,
+.card.♠A {
   background-image: url("../images/spades/spades-A.svg"); }
 
-.card.spades.r13,
-.card.s13,
-.card.♠13 {
+.card.spades.K,
+.card.sK,
+.card.♠K {
   background-image: url("../images/spades/spades-K.svg"); }
 
-.card.spades.r12,
-.card.s12,
-.card.♠12 {
+.card.spades.Q,
+.card.sQ,
+.card.♠Q {
   background-image: url("../images/spades/spades-Q.svg"); }
 
-.card.spades.r11,
-.card.sr11,
-.card.♠11 {
+.card.spades.J,
+.card.sJ,
+.card.♠J {
   background-image: url("../images/spades/spades-J.svg"); }
 
 .card.spades.r10,
@@ -236,24 +236,24 @@
 .card.♠02 {
   background-image: url("../images/spades/spades-r02.svg"); }
 
-.card.clubs.r01,
-.card.c01,
-.card.♣01 {
+.card.clubs.A,
+.card.cA,
+.card.♣A {
   background-image: url("../images/clubs/clubs-A.svg"); }
 
-.card.clubs.r13,
-.card.c13,
-.card.♣13 {
+.card.clubs.K,
+.card.cK,
+.card.♣K {
   background-image: url("../images/clubs/clubs-K.svg"); }
 
-.card.clubs.r12,
-.card.c12,
-.card.♣12 {
+.card.clubs.Q,
+.card.cQ,
+.card.♣Q {
   background-image: url("../images/clubs/clubs-Q.svg"); }
 
-.card.clubs.r11,
-.card.c11,
-.card.♣11 {
+.card.clubs.J,
+.card.cJ,
+.card.♣J {
   background-image: url("../images/clubs/clubs-J.svg"); }
 
 .card.clubs.r10,

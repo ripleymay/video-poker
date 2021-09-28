@@ -1,8 +1,8 @@
 /*----- constants -----*/
 // CARD CONSTANTS - taken from class repo
 const suits = ['s', 'c', 'd', 'h'];
-const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '01'];
-// changed the A K Q J ranks to be numerical values just to make sorting & evaluating wins easier
+const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+const valueLookup = {'A': 1, 'J': 11, 'Q': 12, 'K': 13};
 const masterDeck = buildMasterDeck();
 
 const START_CREDS = 50;
@@ -135,6 +135,7 @@ function handleDeal() {
     // reset bet but somehow keep column highlighted ?
   }
 
+  console.log(hand);
   render();
 }
 
@@ -163,8 +164,8 @@ function buildMasterDeck() {
         deck.push({
           // The 'face' property maps to the library's CSS classes for cards
           face: `${suit}${rank}`,
-          // Setting the 'value' property for game of blackjack, not war
-          value: Number(rank),
+          // Setting the 'value' property
+          value: Number(rank) || valueLookup[rank],
           held: false
         });
       });
