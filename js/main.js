@@ -2,22 +2,22 @@
 // CARD CONSTANTS - taken from class repo
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
-const valueLookup = {'A': 1, 'J': 11, 'Q': 12, 'K': 13};
+const valueLookup = { 'A': 1, 'J': 11, 'Q': 12, 'K': 13 };
 const masterDeck = buildMasterDeck();
 
 const START_CREDS = 50;
 const MAX_BET = 5;
 
 const winLookup = [
-    {name: 'Royal Flush', multiplier: 250},
-    {name: 'Straight Flush', multiplier: 50},
-    {name: 'Four of a Kind', multiplier: 25},
-    {name: 'Full House', multiplier: 9},
-    {name: 'Flush', multiplier: 6},
-    {name: 'Straight', multiplier: 4},
-    {name: 'Three of a Kind', multiplier: 3},
-    {name: 'Two Pair', multiplier: 2},
-    {name: 'Jacks or Better', multiplier: 1}
+  { name: 'Royal Flush', multiplier: 250 },
+  { name: 'Straight Flush', multiplier: 50 },
+  { name: 'Four of a Kind', multiplier: 25 },
+  { name: 'Full House', multiplier: 9 },
+  { name: 'Flush', multiplier: 6 },
+  { name: 'Straight', multiplier: 4 },
+  { name: 'Three of a Kind', multiplier: 3 },
+  { name: 'Two Pair', multiplier: 2 },
+  { name: 'Jacks or Better', multiplier: 1 }
 ]
 
 
@@ -34,7 +34,7 @@ const cashBtn = document.getElementById('cash-out');
 
 
 /*----- event listeners -----*/
-betBtns.forEach(button => 
+betBtns.forEach(button =>
   button.addEventListener("click", handleBet)
 );
 dealBtn.addEventListener('click', handleDeal);
@@ -46,41 +46,44 @@ handElem.addEventListener('click', handleHold);
 init();
 
 function init() {
-    initHand();
-    credits = START_CREDS;
-    bet = 0;
-    inPlay = false;
-    msg = 'Welcome!';
+  initHand();
+  credits = START_CREDS;
+  bet = 0;
+  inPlay = false;
+  msg = 'Welcome!';
 
-    render();
+  render();
 }
 
 function initHand() {
-  hand = [{face: 'back'}, {face: 'back'}, {face: 'back'}, 
-      {face: 'back'}, {face: 'back'}];
+  hand = [{ face: 'back', value: NaN, held: false },
+  { face: 'back', value: NaN, held: false },
+  { face: 'back', value: NaN, held: false },
+  { face: 'back', value: NaN, held: false },
+  { face: 'back', value: NaN, held: false }];
 }
 
 function render() {
-    renderScoreboard();
-    renderHand();
-    document.getElementById('message').innerHTML = `testing: in play is ${inPlay}`;
-    document.getElementById('bet').innerHTML = `Bet ${bet}`;
-    document.getElementById('credits').innerHTML = `${credits} credits`;
-    dealBtn.disabled = (!bet) ? true : false;
-    betBtns.forEach(button => 
-      button.disabled = inPlay ? true : false
-    );
+  renderScoreboard();
+  renderHand();
+  document.getElementById('message').innerHTML = `testing: in play is ${inPlay}`;
+  document.getElementById('bet').innerHTML = `Bet ${bet}`;
+  document.getElementById('credits').innerHTML = `${credits} credits`;
+  dealBtn.disabled = (!bet) ? true : false;
+  betBtns.forEach(button =>
+    button.disabled = inPlay ? true : false
+  );
 }
 
 function renderScoreboard() {
-  scoreElems.forEach(function(col, index) {
+  scoreElems.forEach(function (col, index) {
     col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
   })
 }
 
 function renderHand() {
   let cardsHtml = '';
-  hand.forEach(function(card, index) {
+  hand.forEach(function (card, index) {
     let hold = (card.held) ? ' held' : '';
     cardsHtml += `<div id=${index} class="card ${card.face}${hold}"></div>`;
   })
@@ -119,11 +122,12 @@ function handleDeal() {
   if (!inPlay) {
     deck = getNewShuffledDeck();
     hand = deck.slice(0, 5);
+    // theres a bug here that sometimes deals already 'held' cards
     inPlay = true;
 
     checkForWin();
   } else if (inPlay) {
-    hand.forEach(function(card, index) {
+    hand.forEach(function (card, index) {
       if (!card.held) {
         hand[index] = deck.pop();
       }
@@ -135,7 +139,6 @@ function handleDeal() {
     // reset bet but somehow keep column highlighted ?
   }
 
-  console.log(hand);
   render();
 }
 
@@ -147,41 +150,71 @@ function handleHold(evt) {
 }
 
 function handleCashout() {
- //
+  //
 }
 
 function checkForWin() {
-  const sortedHand = [...hand];
+  let handWins = [];
+
+  const handSuits = [...hand].map(card => card.face[0])
+    .reduce(function (acc, suit) {
+      return acc.includes(suit) ? acc : acc += suit;
+    }, '');
+  const handVals = [...hand].map(card => card.value).sort((card, nextCard) => card - nextCard);
+
+  if (handSuits.length === 1) {
+  // we have a flush
+    if (handVals.every((value, index) => value === handVals[0] + index)) {
+      handWins.push('Straight Flush');
+    } else if (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index)) {
+      // probably not the most elegant way to do this ^
+      handWins.push('Royal Flush');
+    } else {
+      handWins.push('Flush');
+    }
+
+  } else {
+    // there is no flush
+    if (handVals.every((value, index) => value === handVals[0] + index)) {
+      handWins.push('Straight');
+    } else if (for of kind) {
+      handWins.push('Four of a Kind');
+    } else if (three of a kind) {
+      if (full house) handWinds.push('Full House');
+      handWins.push('Three of a Kind');
+    } else if (pair) {
+      if (two pair) handWins.push('Two Pair');
+      if (jacks or better) handWins.push('Jacks or Better');
+    }
+  }
+
+  console.log(handSuits);
+  console.log(handVals);
+  console.log(handWins);
 }
 
 
 // CARD FUNCTIONS - taken from class repo
 function buildMasterDeck() {
-    const deck = [];
-    // Use nested forEach to generate card objects
-    suits.forEach(function(suit) {
-      ranks.forEach(function(rank) {
-        deck.push({
-          // The 'face' property maps to the library's CSS classes for cards
-          face: `${suit}${rank}`,
-          // Setting the 'value' property
-          value: Number(rank) || valueLookup[rank],
-          held: false
-        });
+  const deck = [];
+  suits.forEach(function (suit) {
+    ranks.forEach(function (rank) {
+      deck.push({
+        face: `${suit}${rank}`,
+        value: Number(rank) || valueLookup[rank],
+        held: false
       });
     });
-    return deck;
-  }
+  });
+  return deck;
+}
 
-  function getNewShuffledDeck() {
-    // Create a copy of the masterDeck (leave masterDeck untouched!)
-    const tempDeck = [...masterDeck];
-    const newShuffledDeck = [];
-    while (tempDeck.length) {
-      // Get a random index for a card still in the tempDeck
-      const rndIdx = Math.floor(Math.random() * tempDeck.length);
-      // Note the [0] after splice - this is because splice always returns an array and we just want the card object in that array
-      newShuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
-    }
-    return newShuffledDeck;
+function getNewShuffledDeck() {
+  const tempDeck = [...masterDeck];
+  const newShuffledDeck = [];
+  while (tempDeck.length) {
+    const rndIdx = Math.floor(Math.random() * tempDeck.length);
+    newShuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
   }
+  return newShuffledDeck;
+}
