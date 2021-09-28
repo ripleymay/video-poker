@@ -9,15 +9,15 @@ const START_CREDS = 50;
 const MAX_BET = 5;
 
 const winLookup = [
-  { name: 'Royal Flush', multiplier: 250 },
-  { name: 'Straight Flush', multiplier: 50 },
-  { name: 'Four of a Kind', multiplier: 25, sequence: '14444'},
-  { name: 'Full House', multiplier: 9, sequence: '22333'},
-  { name: 'Flush', multiplier: 6},
-  { name: 'Straight', multiplier: 4},
-  { name: 'Three of a Kind', multiplier: 3, sequence: '11333'},
-  { name: 'Two Pair', multiplier: 2, sequence: '12222'},
-  { name: 'Jacks or Better', multiplier: 1, sequence: '11122'}
+  {name: 'Royal Flush', multiplier: 250 },
+  {name: 'Straight Flush', multiplier: 50 },
+  {name: 'Four of a Kind', multiplier: 25, sequence: '14444'},
+  {name: 'Full House', multiplier: 9, sequence: '22333'},
+  {name: 'Flush', multiplier: 6},
+  {name: 'Straight', multiplier: 4},
+  {name: 'Three of a Kind', multiplier: 3, sequence: '11333'},
+  {name: 'Two Pair', multiplier: 2, sequence: '12222'},
+  {name: 'Jacks or Better', multiplier: 1, sequence: '11122'}
 ]
 
 
@@ -26,11 +26,11 @@ let deck, hand, win, credits, bet, inPlay, msg;
 
 
 /*----- cached element references -----*/
+const winElems = [...document.getElementById('win-names').getElementsByTagName('li')];
 const scoreElems = [...document.querySelectorAll('#scoreboard > ol.values')];
 const handElem = document.getElementById('hand');
 const betBtns = document.querySelectorAll('button.bet');
 const dealBtn = document.getElementById('deal-draw');
-const cashBtn = document.getElementById('cash-out');
 
 
 /*----- event listeners -----*/
@@ -38,7 +38,6 @@ betBtns.forEach(button =>
   button.addEventListener("click", handleBet)
 );
 dealBtn.addEventListener('click', handleDeal);
-cashBtn.addEventListener('click', handleCashout);
 handElem.addEventListener('click', handleHold);
 
 
@@ -57,17 +56,14 @@ function init() {
 }
 
 function initHand() {
-  hand = [{ face: 'back', value: NaN, held: false},
-  { face: 'back', value: NaN, held: false},
-  { face: 'back', value: NaN, held: false},
-  { face: 'back', value: NaN, held: false},
-  { face: 'back', value: NaN, held: false}];
+  hand = [{ face: 'back'}, { face: 'back'}, { face: 'back'}, { face: 'back'}, { face: 'back'}];
 }
+
 
 function render() {
   renderScoreboard();
   renderHand();
-  document.getElementById('message').innerHTML = `winner is... ${winLookup[win - 1].name}`;
+  document.getElementById('message').innerHTML = `${msg}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
   document.getElementById('credits').innerHTML = `${credits} credits`;
   dealBtn.disabled = (!bet) ? true : false;
@@ -77,9 +73,12 @@ function render() {
 }
 
 function renderScoreboard() {
+  winElems.forEach(function (name, index) {
+    name.style.color = (index === win - 1) ? 'red' : 'black';
+  });
   scoreElems.forEach(function (col, index) {
     col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
-  })
+  });
 }
 
 function renderHand() {
@@ -90,6 +89,7 @@ function renderHand() {
   })
   handElem.innerHTML = cardsHtml;
 }
+
 
 function handleBet(evt) {
   // TO DO: alert player when they dont have enough credits to bet
@@ -137,8 +137,10 @@ function handleDeal() {
     inPlay = false;
 
     win = checkForWin();
-    // add winnings to credits
-    // reset bet but somehow keep column highlighted ?
+    if (win) credits += (bet * winLookup[win - 1].multiplier);
+    msg = 'Try again?';
+    bet = 0;
+    // somehow keep column highlighted if poss?
   }
 
   render();
@@ -151,12 +153,9 @@ function handleHold(evt) {
   render();
 }
 
-function handleCashout() {
-  //
-}
 
 function checkForWin() {
-  let handWins = [0];
+  let handWins = [];
 
   const handSuits = [...hand].map(card => card.face[0])
     .reduce(function (acc, suit) {
@@ -181,13 +180,13 @@ function checkForWin() {
     if (handVals.every((value, index) => value === handVals[0] + index)) {
       handWins.push(6);
     } else if (normalizedHandVals === '11122') {
-      if (handVals.some((value, index) => (value >= 11 && (value === handVals[index = 1] || value === handVals[index - 1])))) handWins.push(9);
+      if (handVals.some((value, index) => ((value >= 11 || value === 1) && value === handVals[index + 1]))) handWins.push(9);
     } else {
       handWins.push(winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1);
     }
   }
 
-  return Math.min(...handWins);
+  return handWins.length ? Math.min(...handWins) : 0;
 }
 
 function normalizeRanks(rankArray) {
@@ -200,7 +199,6 @@ function normalizeRanks(rankArray) {
 
   return normalized.sort().join('');
 }
-
 
 // CARD FUNCTIONS - taken from class repo
 function buildMasterDeck() {
