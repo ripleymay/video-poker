@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ripley's Casino</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap">
     <link rel="stylesheet" href="css/card-deck-css/css/cardstarter.css"/>
     <link rel="stylesheet" href="css/main.css">
@@ -18,7 +19,7 @@
         <h2>Jacks or Better</h2>
     </header>
     <main>
-        <section id="scoreboard">
+        <section id="win-table">
             <ol id="win-names">
                 <li>Royal Flush</li><li>Straight Flush</li><li>Four of a Kind</li>
                 <li>Full House</li><li>Flush</li><li>Straight</li>
@@ -66,6 +67,10 @@
             <p id="credits"></p>
         </section>
     </main>
-    <footer>Need <a href="https://www.youtube.com/watch?v=J89HlCYccds">help</a> learning how to play?</footer>
+    <footer>
+        <div id="sound"><i id ="sound" class="bi bi-volume-mute-fill"></i></div>
+        <audio id="bg" src="audio/casinoAmbiance.mp3" loop></audio>
+        <p>Need <a href="https://www.youtube.com/watch?v=J89HlCYccds">help</a> learning how to play?</p>
+    </footer>
 </body>
 </html>

@@ -2,7 +2,7 @@
     box-sizing: border-box;
   }
 
-body, main, header, #scoreboard, #hand {
+body, main, header, #win-table, #hand, footer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,10 +20,6 @@ body {
     background-color: green;
 }
 
-/* main {
-    width: 80%;
-} */
-
 header > * {
     margin: 0 auto;
 }
@@ -36,12 +32,10 @@ h2 {
     font-size: 3vh;
 }
 
-#scoreboard {
-    width: 60vh;
-    height: 30vh;
+#win-table {
     margin: 3%;
     align-items: stretch;
-    /* border: 4px solid black; */
+    border: 3px solid black;
 }
 
 ol {
@@ -49,11 +43,16 @@ ol {
     list-style-type: none; 
     border: 2px solid black;
     background-color: rgba(255, 255, 255, 0.25);
-    padding: 0 2%;
+    padding: 1% 2%;
     margin: 0;
 }
 
+ol.values {
+    min-width: 8vh;
+}
+
 #win-names {
+    min-width: 20vh;
     background-color: rgba(255, 255, 255, 0.75);
     color: black;
 }
@@ -63,7 +62,7 @@ ol {
 }
 
 #hand > div.held {
-    border: 5px solid darkblue;
+    border: 6px solid darkblue;
 }
 
 #user-bar {
@@ -82,6 +81,7 @@ ol {
 }
 
 #user-bar > button {
+    color: black;
     font-size: 1.75vh;
     font-family: 'MuseoModerno', sans-serif;
     background-color: white;
@@ -90,15 +90,30 @@ ol {
     margin: 5%;
 }
 
+#user-bar > button:disabled {
+    color: lightgrey;
+}
+
 #user-bar > p {
     font-size: 2.5vh;
     text-align: center;
+    align-self: center;
+    margin: 0 2vh;
 }
 
 footer {
-    font-size: 1.5vh;
+    width: 80%;
 }
 
-footer > a {
+footer > #sound {
+    margin: 0 3%;
+}
+
+footer > p {
+    font-size: 1.5vh;
+    margin: 0;
+}
+
+footer > p > a {
     color: gold;
 }

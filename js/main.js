@@ -22,15 +22,17 @@ const winLookup = [
 
 
 /*----- app's state (variables) -----*/
-let deck, hand, win, credits, bet, round, msg;
+let deck, hand, win, credits, bet, round, sound, msg;
 
 
 /*----- cached element references -----*/
 const winElems = [...document.getElementById('win-names').getElementsByTagName('li')];
-const scoreElems = [...document.querySelectorAll('#scoreboard > ol.values')];
+const scoreElems = [...document.querySelectorAll('#win-table > ol.values')];
 const handElem = document.getElementById('hand');
 const betBtns = document.querySelectorAll('button.bet');
 const dealBtn = document.getElementById('deal-draw');
+const bgSound = document.getElementById('bg');
+const soundBtn = document.getElementById('sound');
 
 
 /*----- event listeners -----*/
@@ -39,6 +41,7 @@ betBtns.forEach(button =>
 );
 dealBtn.addEventListener('click', handleDeal);
 handElem.addEventListener('click', handleHold);
+soundBtn.addEventListener('click', toggleSound);
 
 
 /*----- functions -----*/
@@ -50,8 +53,8 @@ function init() {
   bet = 0;
   win = 0;
   round = 0;
+  sound = false;
   msg = 'Welcome!';
-
   render();
 }
 
@@ -61,7 +64,7 @@ function initHand() {
 
 
 function render() {
-  renderScoreboard();
+  renderWinTable();
   renderHand();
   document.getElementById('message').innerHTML = `${msg}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
@@ -71,9 +74,10 @@ function render() {
   betBtns.forEach(button =>
     button.disabled = (round === 2 || !credits) ? true : false
   );
+  renderSound();
 }
 
-function renderScoreboard() {
+function renderWinTable() {
   winElems.forEach(function (name, index) {
     name.style.color = (index === win - 1) ? 'red' : 'black';
   });
@@ -91,11 +95,26 @@ function renderHand() {
   handElem.innerHTML = cardsHtml;
 }
 
+function renderSound() {
+  if (sound) {
+    bgSound.play();
+    soundBtn.innerHTML = '<i class="glyphicon glyphicon-volume-up fa-lg"></i>';
+  } else {
+    bgSound.pause();
+    soundBtn.innerHTML = '<i class="glyphicon glyphicon-volume-off fa-lg"></i>';
+  }
+}
+
+
+function toggleSound() {
+  sound = !sound;
+  render();
+}
 
 function handleBet(evt) {
   if (!round) round++;
   win = 0;
-  msg = 'Place a bet.'
+  msg = 'Ready to deal?'
   initHand();
 
   if (evt.target.id === 'one') {
@@ -107,7 +126,6 @@ function handleBet(evt) {
       betMax();
     }
   }
-
   render();
 }
 
@@ -161,15 +179,12 @@ function draw() {
   } else {
     msg = 'Try again?';
   }
-
   if (!credits) msg = 'You\'re out of credits! Play again?'
 }
-
 
 function handleHold(evt) {
   if (round !== 2) return;
   hand[evt.target.id].held = !hand[evt.target.id].held;
-
   render();
 }
 
@@ -205,7 +220,6 @@ function checkForWin() {
       handWins.push(winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1);
     }
   }
-
   return handWins.length ? Math.min(...handWins) : 0;
 }
 
@@ -216,9 +230,9 @@ function normalizeRanks(rankArray) {
     let count = rankArray.reduce((acc, value) => (value === rank ? ++acc : acc), 0);
     normalized.push(count);
   })
-
   return normalized.sort().join('');
 }
+
 
 // CARD FUNCTIONS - taken from class repo
 function buildMasterDeck() {
