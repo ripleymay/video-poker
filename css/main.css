@@ -105,7 +105,7 @@ footer {
     width: 80%;
 }
 
-footer > #sound {
+#sound, #restart {
     margin: 0 3%;
 }
 

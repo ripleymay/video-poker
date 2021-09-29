@@ -42,6 +42,7 @@ betBtns.forEach(button =>
 dealBtn.addEventListener('click', handleDeal);
 handElem.addEventListener('click', handleHold);
 soundBtn.addEventListener('click', toggleSound);
+document.getElementById('restart').addEventListener('click', init);
 
 
 /*----- functions -----*/
@@ -98,10 +99,10 @@ function renderHand() {
 function renderSound() {
   if (sound) {
     bgSound.play();
-    soundBtn.innerHTML = '<i class="glyphicon glyphicon-volume-up fa-lg"></i>';
+    soundBtn.innerHTML = '<i class="glyphicon glyphicon-pause"></i>';
   } else {
     bgSound.pause();
-    soundBtn.innerHTML = '<i class="glyphicon glyphicon-volume-off fa-lg"></i>';
+    soundBtn.innerHTML = '<i class="glyphicon glyphicon-music"></i>';
   }
 }
 
