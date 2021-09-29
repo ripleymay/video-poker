@@ -231,6 +231,7 @@ function normalizeRanks(rankArray) {
     let count = rankArray.reduce((acc, value) => (value === rank ? ++acc : acc), 0);
     normalized.push(count);
   })
+
   return normalized.sort().join('');
 }
 

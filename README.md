@@ -2,10 +2,12 @@
 
 Now you can play outside the casino - or in *Ripley's Casino* rather! Video poker is a single player game usually played on a machine (similar to slots). The game has grown very popular since it's creation in 1970, and it's perfect as an approachable introduction to poker for a novice player.  
 
-**Click [here](https://ripleymay.github.io/video-poker/) to play!**
+There's many different versions of the game, but one of the most common - and the one you'll play here - is *Jacks or Better*, where the lowest ranking winning hand is a pair of Jacks or better (Queen, King, Ace).
 
 
 ## Getting started
+
+**Click [here](https://ripleymay.github.io/video-poker/) to play!**  
 
 The game is relatively simple - you place a bet of 1 to 5 credits, then you are dealt five cards. You can hold any or all of those cards, then draw again to replace the ones you did not hold. After you draw, those 5 cards are evaluated for a winning poker hand, and you recieve the equivalent credits based on how much you bet and the rank of your winning hand. If you have no wins, you lose your bet.  
 
@@ -15,7 +17,8 @@ It's helpful to review winning poker hands, although the names of them are displ
 
 There is also a link to a helpful instructional video in the footer of the page. 
 
-**screenshots go here**
+![Screenshot2](images/start_screen.jpg)
+![Screenshot1](images/win_screen.jpg)
 
 
 ## Next steps
@@ -25,6 +28,6 @@ As of now, the player automatically starts with 50 credits, but it would be pref
 Ideally, the player could choose to *actually* pay for credits AND cash out, so the stakes of winning and losing would be a bit higher!
 
 
-### Technologies used
+## Technologies used
 * HTML/CSS
 * native JavaScript
