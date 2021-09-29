@@ -22,7 +22,7 @@ const winLookup = [
 
 
 /*----- app's state (variables) -----*/
-let deck, hand, win, credits, bet, inPlay, msg;
+let deck, hand, win, credits, bet, round, msg;
 
 
 /*----- cached element references -----*/
@@ -49,7 +49,7 @@ function init() {
   credits = START_CREDS;
   bet = 0;
   win = 0;
-  inPlay = false;
+  round = 0;
   msg = 'Welcome!';
 
   render();
@@ -66,9 +66,10 @@ function render() {
   document.getElementById('message').innerHTML = `${msg}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
   document.getElementById('credits').innerHTML = `${credits} credits`;
-  dealBtn.disabled = (!bet) ? true : false;
+  dealBtn.disabled = (round === 0) ? true : false;
+  dealBtn.textContent = (round === 2) ? 'Draw' : 'Deal';
   betBtns.forEach(button =>
-    button.disabled = inPlay ? true : false
+    button.disabled = (round === 2) ? true : false
   );
 }
 
@@ -93,6 +94,8 @@ function renderHand() {
 
 function handleBet(evt) {
   // TO DO: alert player when they dont have enough credits to bet
+  if (!round) round++;
+
   initHand();
   win = 0;
 
@@ -121,33 +124,44 @@ function betMax() {
 }
 
 function handleDeal() {
-  if (!inPlay) {
-    deck = getNewShuffledDeck();
-    hand = deck.slice(0, 5);
-    // theres a bug here that sometimes deals already 'held' cards
-    inPlay = true;
-
-    win = checkForWin();
-  } else if (inPlay) {
-    hand.forEach(function (card, index) {
-      if (!card.held) {
-        hand[index] = deck.pop();
-      }
-    });
-    inPlay = false;
-
-    win = checkForWin();
-    if (win) credits += (bet * winLookup[win - 1].multiplier);
-    msg = 'Try again?';
+  if (round === 1) {
+    deal();
+    render();
+  } else if (round === 2) {
+    draw();
+    render();
     bet = 0;
-    // somehow keep column highlighted if poss?
   }
-
-  render();
 }
 
+function deal() {
+  deck = getNewShuffledDeck();
+  hand = deck.slice(0, 5);
+  round++;
+  win = checkForWin();
+  if (win) msg = `${winLookup[win - 1].name}!`;
+}
+
+function draw() {
+  hand.forEach(function (card, index) {
+    if (!card.held) {
+      hand[index] = deck.pop();
+    }
+  });
+  round = 0;
+  win = checkForWin();
+
+  if (win) {
+    credits += (bet * winLookup[win - 1].multiplier);
+    msg = `You won ${(bet * winLookup[win - 1].multiplier)} credits with ${(winLookup[win - 1].name)}!`;
+  } else {
+    msg = 'Try again?';
+  }
+}
+
+
 function handleHold(evt) {
-  if (!inPlay) return;
+  if (round !== 2) return;
   hand[evt.target.id].held = !hand[evt.target.id].held;
 
   render();
@@ -220,7 +234,9 @@ function getNewShuffledDeck() {
   const newShuffledDeck = [];
   while (tempDeck.length) {
     const rndIdx = Math.floor(Math.random() * tempDeck.length);
-    newShuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
+    const card = tempDeck.splice(rndIdx, 1)[0];
+    card.held = false;
+    newShuffledDeck.push(card);
   }
   return newShuffledDeck;
 }
