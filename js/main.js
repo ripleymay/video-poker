@@ -66,10 +66,10 @@ function render() {
   document.getElementById('message').innerHTML = `${msg}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
   document.getElementById('credits').innerHTML = `${credits} credits`;
-  dealBtn.disabled = (round === 0) ? true : false;
+  dealBtn.disabled = (!round) ? true : false;
   dealBtn.textContent = (round === 2) ? 'Draw' : 'Deal';
   betBtns.forEach(button =>
-    button.disabled = (round === 2) ? true : false
+    button.disabled = (round === 2 || !credits) ? true : false
   );
 }
 
@@ -77,8 +77,8 @@ function renderScoreboard() {
   winElems.forEach(function (name, index) {
     name.style.color = (index === win - 1) ? 'red' : 'black';
   });
-  scoreElems.forEach(function (col, index) {
-    col.style.backgroundColor = (index === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
+  scoreElems.forEach(function(col, colIdx) {
+    col.style.backgroundColor = (colIdx === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
   });
 }
 
@@ -93,16 +93,19 @@ function renderHand() {
 
 
 function handleBet(evt) {
-  // TO DO: alert player when they dont have enough credits to bet
   if (!round) round++;
-
-  initHand();
   win = 0;
+  msg = 'Place a bet.'
+  initHand();
 
   if (evt.target.id === 'one') {
-    betOne();
+      betOne();
   } else if (evt.target.id === 'max') {
-    betMax();
+    if (credits + bet - MAX_BET < 0) {
+      msg = 'You don\'t have enough credits.'
+    } else {
+      betMax();
+    }
   }
 
   render();
@@ -139,7 +142,8 @@ function deal() {
   hand = deck.slice(0, 5);
   round++;
   win = checkForWin();
-  if (win) msg = `${winLookup[win - 1].name}!`;
+  msg = 'Hold the cards you\'d like to keep.';
+  if (win) msg = `${winLookup[win - 1].name}! Hold your cards.`;
 }
 
 function draw() {
@@ -157,6 +161,8 @@ function draw() {
   } else {
     msg = 'Try again?';
   }
+
+  if (!credits) msg = 'You\'re out of credits! Play again?'
 }
 
 
