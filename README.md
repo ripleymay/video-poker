@@ -17,8 +17,8 @@ It's helpful to review winning poker hands, although the names of them are displ
 
 There is also a link to a helpful instructional video in the footer of the page. 
 
-![Screenshot2](images/start_screen.jpg)
-![Screenshot1](images/win_screen.jpg)
+![Screenshot1](https://i.imgur.com/cgaPyME.png)
+![Screenshot2](https://i.imgur.com/8ipXtAN.png)
 
 
 ## Next steps
