@@ -25,11 +25,11 @@ header > * {
 }
 
 h1 {
-    font-size: 6vh;
+    font-size: 6vmin;
 }
 
 h2 {
-    font-size: 3vh;
+    font-size: 3vmin;
 }
 
 #pay-table {
@@ -38,48 +38,53 @@ h2 {
 }
 
 ol {
-    font-size: 2vh;
+    font-size: 2vmin;
     list-style-type: none; 
-    border: 0.5vh solid black;
+    border: 0.5vmin solid black;
     background-color: rgba(255, 255, 255, 0.25);
     padding: 1% 2%;
     margin: 0;
 }
 
 ol.values {
-    min-width: 8vh;
+    min-width: 8vmin;
     border-left: none;
 }
 
 #win-names {
-    min-width: 20vh;
+    min-width: 20vmin;
     background-color: rgba(255, 255, 255, 0.75);
     color: black;
 }
 
+#hand {
+    max-width: 90vmin;
+}
+
 #hand > div.card {
-    margin: 0 1vh;
+    max-height: 25vmin;
+    margin: 0 1vmin;
     cursor: default;
 }
 
 #hand > div:not(.held):not(.back):not(.stale):hover {
-    border: 1vh solid #3333A2;
+    border: 0.75vmin solid #3333A2;
 }
 
 #hand > div.held {
-    border: 1vh solid darkblue;
+    border: 0.75vmin solid darkblue;
 }
 
 #user-bar {
     display: grid;
     grid-template-columns: repeat(5, 20%);
     grid-template-rows: 35% 65%;
-    width: 60vh;
+    width: 60vmin;
     margin: 3%;
 }
 
 #user-bar > h3 {
-    font-size: 3vh;
+    font-size: 3vmin;
     text-align: center;
     grid-column: 1 / -1;
     margin: 0 0 5% 0;
@@ -87,10 +92,10 @@ ol.values {
 
 #user-bar > button {
     color: black;
-    font-size: 1.75vh;
+    font-size: 1.75vmin;
     font-family: 'MuseoModerno', sans-serif;
     background-color: white;
-    border: 1.2vh double darkblue;
+    border: 1.2vmin double darkblue;
     border-radius: 50%;
     margin: 5%;
 }
@@ -100,10 +105,10 @@ ol.values {
 }
 
 #user-bar > p {
-    font-size: 2.5vh;
+    font-size: 2.5vmin;
     text-align: center;
     align-self: center;
-    margin: 0 2vh;
+    margin: 0 2vmin;
 }
 
 footer {
@@ -116,7 +121,7 @@ footer {
 }
 
 footer > p {
-    font-size: 1.5vh;
+    font-size: 1.5vmin;
     margin: 0;
 }
 

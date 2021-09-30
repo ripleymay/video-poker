@@ -190,50 +190,40 @@ function handleHold(evt) {
   render();
 }
 
-
 function checkForWin() {
-  let handWins = [];
-
-  const handSuits = hand.map(card => card.face[0])
-    .reduce(function (acc, suit) {
-      return acc.includes(suit) ? acc : acc += suit;
-    }, '');
+  const handSuits = hand.map(card => card.face[0]);
   const handVals = hand.map(card => card.value).sort((card, nextCard) => card - nextCard);
   const normalizedHandVals = normalizeRanks(handVals);
 
-  if (handSuits.length === 1) {
-  // we have a flush
-    if (handVals.every((value, index) => value === handVals[0] + index)) {
-      handWins.push(2);
-    } else if (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index)) {
-      // probably not the most elegant way to do this ^
-      handWins.push(1);
-    } else {
-      handWins.push(5);
-    }
-
+  if (handSuits.every(suit => suit === handSuits[0]) &&
+    (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index))) {
+    return 1;
+  } else if (handSuits.every(suit => suit === handSuits[0] && 
+    (handVals.every((value, index) => value === handVals[0] + index)))) {
+    return 2;
+  } else if (normalizedHandVals === '14444' || normalizedHandVals === '22333') {
+    return winLookup.slice(2, 4).findIndex(winner => winner.sequence === normalizedHandVals) + 1;
+  } else if (handSuits.every(suit => suit === handSuits[0])) {
+    return 5;
+  } else if (handVals.every((value, index) => value === handVals[0] + index)) {
+    return 6;
   } else {
-    // there is no flush, check for a straight
-    if (handVals.every((value, index) => value === handVals[0] + index)) {
-      handWins.push(6);
-    } else if (normalizedHandVals === '11122') {
-      if (handVals.some((value, index) => ((value >= 11 || value === 1) && value === handVals[index + 1]))) handWins.push(9);
-    } else {
-      handWins.push(winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1);
-    }
+    return winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1;
   }
-  return handWins.length ? Math.min(...handWins) : 0;
 }
 
 function normalizeRanks(rankArray) {
   let normalized = [];
-
   rankArray.forEach(function(rank) {
     let count = rankArray.reduce((acc, value) => (value === rank ? ++acc : acc), 0);
     normalized.push(count);
   })
-
-  return normalized.sort().join('');
+  let normalizedStr = normalized.sort().join('');
+  // disregard pairs of 10 or lower
+  if (normalizedStr === '11122' && !(rankArray.some((value, index) => ((value >= 11 || value === 1) && value === rankArray[index + 1])))) {
+    normalizedStr = '11111';
+  }
+  return normalizedStr;
 }
 
 
