@@ -192,14 +192,16 @@ function checkForWin() {
   const handVals = hand.map(card => card.value).sort((card, nextCard) => card - nextCard);
   const normalizedHandVals = normalizeRanks(handVals);
 
+  console.log(handSuits);
   if (handSuits.every(suit => suit === handSuits[0]) &&
     (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index))) {
     return 1;
+    console.log()
   } else if (handSuits.every(suit => suit === handSuits[0] &&
     (handVals.every((value, index) => value === handVals[0] + index)))) {
     return 2;
   } else if (normalizedHandVals === '14444' || normalizedHandVals === '22333') {
-    return winLookup.slice(2, 4).findIndex(winner => winner.sequence === normalizedHandVals) + 1;
+    return winLookup.slice(0, 4).findIndex(winner => winner.sequence === normalizedHandVals) + 1;
   } else if (handSuits.every(suit => suit === handSuits[0])) {
     return 5;
   } else if (handVals.every((value, index) => value === handVals[0] + index)) {
