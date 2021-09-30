@@ -27,7 +27,7 @@ let deck, hand, win, credits, bet, round, sound, msg;
 
 /*----- cached element references -----*/
 const winElems = [...document.getElementById('win-names').getElementsByTagName('li')];
-const scoreElems = [...document.querySelectorAll('#win-table > ol.values')];
+const scoreElems = [...document.querySelectorAll('#pay-table > ol.values')];
 const handElem = document.getElementById('hand');
 const betBtns = document.querySelectorAll('button.bet');
 const dealBtn = document.getElementById('deal-draw');
@@ -91,7 +91,8 @@ function renderHand() {
   let cardsHtml = '';
   hand.forEach(function (card, index) {
     let hold = (card.held) ? ' held' : '';
-    cardsHtml += `<div id=${index} class="card ${card.face}${hold}"></div>`;
+    let stale = (!round) ? ' stale' : '';
+    cardsHtml += `<div id=${index} class="card ${card.face}${hold}${stale}"></div>`;
   })
   handElem.innerHTML = cardsHtml;
 }
@@ -193,11 +194,11 @@ function handleHold(evt) {
 function checkForWin() {
   let handWins = [];
 
-  const handSuits = [...hand].map(card => card.face[0])
+  const handSuits = hand.map(card => card.face[0])
     .reduce(function (acc, suit) {
       return acc.includes(suit) ? acc : acc += suit;
     }, '');
-  const handVals = [...hand].map(card => card.value).sort((card, nextCard) => card - nextCard);
+  const handVals = hand.map(card => card.value).sort((card, nextCard) => card - nextCard);
   const normalizedHandVals = normalizeRanks(handVals);
 
   if (handSuits.length === 1) {
@@ -212,7 +213,7 @@ function checkForWin() {
     }
 
   } else {
-    // there is no flush
+    // there is no flush, check for a straight
     if (handVals.every((value, index) => value === handVals[0] + index)) {
       handWins.push(6);
     } else if (normalizedHandVals === '11122') {
