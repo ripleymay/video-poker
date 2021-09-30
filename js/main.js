@@ -1,5 +1,4 @@
 /*----- constants -----*/
-// CARD CONSTANTS - taken from class repo
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 const valueLookup = { 'A': 1, 'J': 11, 'Q': 12, 'K': 13 };
@@ -18,10 +17,10 @@ const winLookup = [
   {name: 'Three of a Kind', multiplier: 3, sequence: '11333'},
   {name: 'Two Pair', multiplier: 2, sequence: '12222'},
   {name: 'Jacks or Better', multiplier: 1, sequence: '11122'}
-]
+];
 
 
-/*----- app's state (variables) -----*/
+/*----- state variables -----*/
 let deck, hand, win, credits, bet, round, sound, msg;
 
 
@@ -60,29 +59,28 @@ function init() {
 }
 
 function initHand() {
-  hand = [{ face: 'back'}, { face: 'back'}, { face: 'back'}, { face: 'back'}, { face: 'back'}];
+  hand = [{ face: 'back' }, { face: 'back' }, { face: 'back' }, { face: 'back' }, { face: 'back' }];
 }
 
-
 function render() {
-  renderWinTable();
+  renderPayTable();
   renderHand();
   document.getElementById('message').innerHTML = `${msg}`;
   document.getElementById('bet').innerHTML = `Bet ${bet}`;
   document.getElementById('credits').innerHTML = `${credits} credits`;
-  dealBtn.disabled = (!round) ? true : false;
-  dealBtn.textContent = (round === 2) ? 'Draw' : 'Deal';
   betBtns.forEach(button =>
     button.disabled = (round === 2 || !credits) ? true : false
   );
+  dealBtn.textContent = (round === 2) ? 'Draw' : 'Deal';
+  dealBtn.disabled = (!round) ? true : false;
   renderSound();
 }
 
-function renderWinTable() {
+function renderPayTable() {
   winElems.forEach(function (name, index) {
     name.style.color = (index === win - 1) ? 'red' : 'black';
   });
-  scoreElems.forEach(function(col, colIdx) {
+  scoreElems.forEach(function (col, colIdx) {
     col.style.backgroundColor = (colIdx === bet - 1) ? 'rgba(255, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.25)';
   });
 }
@@ -99,6 +97,7 @@ function renderHand() {
 
 function renderSound() {
   if (sound) {
+    bgSound.volume = 0.5;
     bgSound.play();
     soundBtn.innerHTML = '<i class="glyphicon glyphicon-pause"></i>';
   } else {
@@ -106,7 +105,6 @@ function renderSound() {
     soundBtn.innerHTML = '<i class="glyphicon glyphicon-music"></i>';
   }
 }
-
 
 function toggleSound() {
   sound = !sound;
@@ -120,7 +118,7 @@ function handleBet(evt) {
   initHand();
 
   if (evt.target.id === 'one') {
-      betOne();
+    betOne();
   } else if (evt.target.id === 'max') {
     if (credits + bet - MAX_BET < 0) {
       msg = 'You don\'t have enough credits.'
@@ -160,10 +158,9 @@ function handleDeal() {
 function deal() {
   deck = getNewShuffledDeck();
   hand = deck.slice(0, 5);
-  round++;
   win = checkForWin();
-  msg = 'Hold the cards you\'d like to keep.';
-  if (win) msg = `${winLookup[win - 1].name}! Hold your cards.`;
+  round++;
+  msg = (win) ? `${winLookup[win - 1].name}! Hold your cards.` : 'Hold the cards you\'d like to keep.';
 }
 
 function draw() {
@@ -172,8 +169,8 @@ function draw() {
       hand[index] = deck.pop();
     }
   });
-  round = 0;
   win = checkForWin();
+  round = 0;
 
   if (win) {
     credits += (bet * winLookup[win - 1].multiplier);
@@ -181,7 +178,7 @@ function draw() {
   } else {
     msg = 'Try again?';
   }
-  if (!credits) msg = 'You\'re out of credits! Play again?'
+  if (!credits) msg = 'You\'re out of credits! <a href="https://ripleymay.github.io/video-poker/">Play again?</a>'
 }
 
 function handleHold(evt) {
@@ -198,7 +195,7 @@ function checkForWin() {
   if (handSuits.every(suit => suit === handSuits[0]) &&
     (handVals.includes(1) && handVals.includes(13) && handVals.slice(1).every((value, index) => value === handVals[1] + index))) {
     return 1;
-  } else if (handSuits.every(suit => suit === handSuits[0] && 
+  } else if (handSuits.every(suit => suit === handSuits[0] &&
     (handVals.every((value, index) => value === handVals[0] + index)))) {
     return 2;
   } else if (normalizedHandVals === '14444' || normalizedHandVals === '22333') {
@@ -214,7 +211,7 @@ function checkForWin() {
 
 function normalizeRanks(rankArray) {
   let normalized = [];
-  rankArray.forEach(function(rank) {
+  rankArray.forEach(function (rank) {
     let count = rankArray.reduce((acc, value) => (value === rank ? ++acc : acc), 0);
     normalized.push(count);
   })
@@ -226,8 +223,6 @@ function normalizeRanks(rankArray) {
   return normalizedStr;
 }
 
-
-// CARD FUNCTIONS - taken from class repo
 function buildMasterDeck() {
   const deck = [];
   suits.forEach(function (suit) {

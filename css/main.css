@@ -62,7 +62,7 @@ ol.values {
 }
 
 #hand > div.card {
-    max-height: 25vmin;
+    max-height: 22vmin;
     margin: 0 1vmin;
     cursor: default;
 }
@@ -125,6 +125,6 @@ footer > p {
     margin: 0;
 }
 
-footer > p > a {
+a {
     color: gold;
 }
