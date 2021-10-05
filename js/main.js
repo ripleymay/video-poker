@@ -202,7 +202,8 @@ function checkForWin() {
     return winLookup.slice(0, 4).findIndex(winner => winner.sequence === normalizedHandVals) + 1;
   } else if (handSuits.every(suit => suit === handSuits[0])) {
     return 5;
-  } else if (handVals.every((value, index) => value === handVals[0] + index)) {
+  } else if ((handVals.every((value, index) => value === handVals[0] + index)) ||
+    (handVals.includes(1) && handVals.slice(1).every((value, index) => value === handVals[1] + index))) {
     return 6;
   } else {
     return winLookup.findIndex(winner => winner.sequence === normalizedHandVals) + 1;

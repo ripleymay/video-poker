@@ -31,3 +31,4 @@ Ideally, the player could choose to *actually* pay for credits AND cash out, so 
 ## Technologies used
 * HTML/CSS
 * native JavaScript
+* CSS Card Starter Library (provided by General Assembly)
